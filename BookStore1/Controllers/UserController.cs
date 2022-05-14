@@ -47,12 +47,14 @@ namespace BookStore1.Controllers
             }
             else
             {
-                var comment = new SubComment();
-                //{
-                //    MainCommentId = commentViewModel.CommentId,
-                //    CommentText = commentViewModel.CommentText,
-                //    CreationDate = DateTime.Now,
-                //};
+                _database.SubComments.Add(new SubComment
+                {
+                    MainCommentId = commentViewModel.CommentIntialId,
+                    CommentText = commentViewModel.CommentText,
+                    UserName = User.Identity.Name,
+                    CreationDate = DateTime.Now,
+                });
+                _database.SaveChanges();
             }
             return RedirectToAction("ViewBook", new { id = commentViewModel?.Book?.Id });
         }

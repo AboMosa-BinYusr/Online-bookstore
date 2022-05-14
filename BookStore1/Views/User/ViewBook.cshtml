@@ -37,18 +37,24 @@
     <a class="btn btn-primary" href="https://www.paypal.com/ye/signin" target="_blank">Buy</a>
     <a asp-controller="Home" asp-action="HomeView">Back to List</a>
 </div>
-<div>
-    <form method="post" asp-controller="User" asp-action="Comment">
-        <input asp-for="Book.Id" type="hidden" />
-        <input asp-for="Book.Name" type="hidden" />
-        <input asp-for="CommentIntialId" type="hidden" />
-        <input asp-for="CommentText"/>
-        <button class="btn btn-primary" type="submit">Comment</button>
-    </form> 
+<div class="MainComment">
+    <partial name="_Comment" model='new BookCommentViewModel {Book = Model.Book, CommentIntialId = 0}' />
 </div>
 @foreach (var comment in Model.Book.MainComments){
     <p>
         <h5>@comment.UserName</h5>
         @comment.CommentText --- @comment.CreationDate
     </p>
+    <div class="Reply">
+    <div class="Reply">
+        <partial name="_Comment" model='new BookCommentViewModel {Book = Model.Book, CommentIntialId = comment.Id}'>
+    </div>
+    @foreach (var reply in comment.SubComments){
+        <p>
+        <b>@reply.UserName</b>
+        <br>
+        @reply.CommentText --- @reply.CreationDate
+        </p>
+    }
+    </div>
 }

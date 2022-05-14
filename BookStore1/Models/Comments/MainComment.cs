@@ -7,8 +7,6 @@ namespace BookStore1.Models.Comments
     {
         [ForeignKey("Book")]
         public int BookId { get; set; }
-        [Required]
-        public string? UserName { get; set; }
         public List<SubComment>? SubComments { get; set; }
     }
 }

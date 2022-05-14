@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookStore1.Models.Comments
 {
@@ -7,6 +6,8 @@ namespace BookStore1.Models.Comments
     {
         [Key]
         public int Id { get; set; }
+        [Required]
+        public string? UserName { get; set; }
         [Required]
         public string? CommentText { get; set; }
         public DateTime CreationDate { get; set; }

@@ -1,0 +1,22 @@
+﻿@model BookCommentViewModel
+
+@{
+
+}
+
+<div>
+    <form method="post" asp-controller="User" asp-action="Comment">
+        <input asp-for="Book.Id" type="hidden" />
+        <input asp-for="Book.Name" type="hidden" />
+        <input asp-for="CommentIntialId" type="hidden" />
+        <input asp-for="CommentText"/>
+        @if (Model.CommentIntialId == 0)
+        {
+            <button class="btn btn-primary" type="submit">Comment</button>
+        }
+        else
+        {
+            <button class="btn btn-primary" type="submit">Reply</button>
+        }
+    </form> 
+</div>
