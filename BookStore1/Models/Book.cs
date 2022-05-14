@@ -15,6 +15,7 @@ namespace BookStore1.Models
         [Required]
         public int Price { get; set; }
         public string? imageURL { get; set; }
+        public string? Category { get; set; }
         public List<MainComment>? MainComments { get; set; }
         [NotMapped]
         public IFormFile? Image { set; get; }
