@@ -1,0 +1,43 @@
+﻿@model BookStore1.Models.Account
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<div class="container-border">
+    <form asp-action="Login" method="post">
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+        <div class="row">
+            <div class="col-3 text-end" style="color: green">
+                 <label asp-for="UserName"><i class="bi bi-person-circle"></i> User name</label>
+            </div>
+            <div class="col-5">
+                <input asp-for="UserName" class="form-control" />
+                <span class="text-danger" asp-validation-for="UserName"></span>
+            </div>  
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-3 text-end" style="color: green">
+                <label asp-for="Password"><i class="bi bi-key-fill"></i> Password</label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Password" class="form-control" />
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 text-end mt-5">
+                <button type="submit" class="btn btn-primary">Sign-in</button>
+            </div>
+            <div class="col-5 mt-5">
+                <a class="btn btn-primary" asp-action="Reigster">Sign-up</a>
+            </div>
+        </div>
+    </form>
+    <div>
+
+    </div>
+</div>
+

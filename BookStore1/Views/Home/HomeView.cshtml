@@ -1,0 +1,23 @@
+﻿@model IEnumerable<BookStore1.Models.Book>
+
+<div>
+</div>
+<div class="row">
+    @foreach (var item in Model) {
+        <div class="col-2 mx-2">
+            <div class="border-3 px-2 py-2 rounded-3 bg-white">
+                <div class="container">
+                    <img src="~/images/@item.imageURL" style="width: 100px; height:160px;"/>
+                </div>
+                <div class="container">
+                   <b class="text text-primary">@Html.DisplayFor(modelItem => item.Name)</b>
+                   <br>
+                   <span style="color: darkgreen">@Html.DisplayFor(modelItem => item.Author)</span>
+                   <br>
+                   <span class="text text-danger">$@Html.DisplayFor(modelItem => item.Price)</span>
+                </div>
+                <a asp-controller="User" asp-action="ViewBook" asp-route-id="@item.Id" class="btn btn-primary mt-2 mx-4">View</a>
+            </div>
+        </div>
+    }
+</div>
