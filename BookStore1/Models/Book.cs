@@ -9,13 +9,15 @@ namespace BookStore1.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        [ForeignKey("Category")]
+        public int CategoryId { get; set; }
+        [Required]
         public string? Name { get; set; }
         [Required]
         public string? Author { get; set; } = "Unknown";
         [Required]
         public int Price { get; set; }
         public string? imageURL { get; set; }
-        public string? Category { get; set; }
         public List<MainComment>? MainComments { get; set; }
         [NotMapped]
         public IFormFile? Image { set; get; }

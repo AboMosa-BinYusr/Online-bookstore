@@ -63,8 +63,8 @@ namespace BookStore1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -78,7 +78,26 @@ namespace BookStore1.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BookStore1.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>
@@ -139,6 +158,15 @@ namespace BookStore1.Migrations
                     b.ToTable("SubComments");
                 });
 
+            modelBuilder.Entity("BookStore1.Models.Book", b =>
+                {
+                    b.HasOne("BookStore1.Models.Category", null)
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>
                 {
                     b.HasOne("BookStore1.Models.Book", null)
@@ -160,6 +188,11 @@ namespace BookStore1.Migrations
             modelBuilder.Entity("BookStore1.Models.Book", b =>
                 {
                     b.Navigation("MainComments");
+                });
+
+            modelBuilder.Entity("BookStore1.Models.Category", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>

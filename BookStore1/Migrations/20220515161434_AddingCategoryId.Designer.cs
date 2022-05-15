@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore1.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20220513173700_UserId")]
-    partial class UserId
+    [Migration("20220515161434_AddingCategoryId")]
+    partial class AddingCategoryId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,6 +65,9 @@ namespace BookStore1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -77,7 +80,26 @@ namespace BookStore1.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BookStore1.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>
@@ -98,8 +120,9 @@ namespace BookStore1.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -126,11 +149,24 @@ namespace BookStore1.Migrations
                     b.Property<int>("MainCommentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MainCommentId");
 
                     b.ToTable("SubComments");
+                });
+
+            modelBuilder.Entity("BookStore1.Models.Book", b =>
+                {
+                    b.HasOne("BookStore1.Models.Category", null)
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>
@@ -154,6 +190,11 @@ namespace BookStore1.Migrations
             modelBuilder.Entity("BookStore1.Models.Book", b =>
                 {
                     b.Navigation("MainComments");
+                });
+
+            modelBuilder.Entity("BookStore1.Models.Category", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>

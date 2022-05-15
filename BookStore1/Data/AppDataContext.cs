@@ -13,5 +13,6 @@ namespace BookStore1.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<MainComment> MainComments { get; set; }
         public DbSet<SubComment> SubComments { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }

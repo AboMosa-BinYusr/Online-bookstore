@@ -46,15 +46,15 @@
         @comment.CommentText --- @comment.CreationDate
     </p>
     <div class="Reply">
-    <div class="Reply">
-        <partial name="_Comment" model='new BookCommentViewModel {Book = Model.Book, CommentIntialId = comment.Id}'>
-    </div>
-    @foreach (var reply in comment.SubComments){
-        <p>
-        <b>@reply.UserName</b>
-        <br>
-        @reply.CommentText --- @reply.CreationDate
-        </p>
-    }
-    </div>
+        <div>
+            <partial name="_Comment" model='new BookCommentViewModel {Book = Model.Book, CommentIntialId = comment.Id}'>
+        </div>
+        @foreach (var reply in comment.SubComments){
+            <p>
+            <b>@reply.UserName</b>
+            <br>
+            @reply.CommentText --- @reply.CreationDate
+            </p>
+        }
+   </div>
 }

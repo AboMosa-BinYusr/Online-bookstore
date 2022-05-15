@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore1.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20220514162259_UserNameInParentCommentModel")]
-    partial class UserNameInParentCommentModel
+    [Migration("20220515203433_Faf")]
+    partial class Faf
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,8 +65,8 @@ namespace BookStore1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -80,7 +80,26 @@ namespace BookStore1.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BookStore1.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>
@@ -141,6 +160,15 @@ namespace BookStore1.Migrations
                     b.ToTable("SubComments");
                 });
 
+            modelBuilder.Entity("BookStore1.Models.Book", b =>
+                {
+                    b.HasOne("BookStore1.Models.Category", null)
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>
                 {
                     b.HasOne("BookStore1.Models.Book", null)
@@ -162,6 +190,11 @@ namespace BookStore1.Migrations
             modelBuilder.Entity("BookStore1.Models.Book", b =>
                 {
                     b.Navigation("MainComments");
+                });
+
+            modelBuilder.Entity("BookStore1.Models.Category", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("BookStore1.Models.Comments.MainComment", b =>
