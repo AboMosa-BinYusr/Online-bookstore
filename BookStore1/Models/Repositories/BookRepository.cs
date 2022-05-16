@@ -1,5 +1,6 @@
 ﻿using BookStore1.Data;
 using BookStore1.Models.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore1.Models.Repositories
 {
@@ -28,7 +29,14 @@ namespace BookStore1.Models.Repositories
 
         public Book? GetBook(int? id)
         {
-            return _database.Books.Find(id); 
+            if (id == null)
+            {
+                return null;
+            }
+            return _database.Books
+                .Include(b => b.MainComments)
+                    .ThenInclude(mainComment => mainComment.SubComments)
+                .FirstOrDefault(b => b.Id == id);
         }
 
         public IEnumerable<Book> GetBooks()

@@ -4,22 +4,26 @@ using Microsoft.AspNetCore.Authorization;
 using BookStore1.ViewModels;
 using BookStore1.Models.Comments;
 using Microsoft.EntityFrameworkCore;
+using BookStore1.Models.Repositories.Interfaces;
 
 namespace BookStore1.Controllers
 {
     public class UserController : Controller
     {
-        private readonly AppDataContext _database;
-        public UserController(AppDataContext database)
+        private readonly IMainCommentRepository _mainCommentRepository;
+        private readonly IBookRepository _bookRepository;
+        private readonly ISubCommentRepository _subCommentRepository;
+
+        public UserController(IMainCommentRepository mainCommentRepository, IBookRepository bookRepository, 
+               ISubCommentRepository subCommentRepository)
         {
-            _database = database;
+            _mainCommentRepository = mainCommentRepository;
+            _bookRepository = bookRepository;
+            _subCommentRepository = subCommentRepository;
         }
         public IActionResult ViewBook(int? id)
         {
-            var book = _database.Books
-                .Include(b => b.MainComments)
-                .ThenInclude(mainComment => mainComment.SubComments)
-                .FirstOrDefault(b => b.Id == id);
+            var book = _bookRepository.GetBook(id);
             if (book == null)
             {
                 return NotFound();
@@ -36,25 +40,11 @@ namespace BookStore1.Controllers
             }
             if (commentViewModel.CommentIntialId == 0)
             {
-                _database.MainComments.Add(new MainComment
-                {
-                    CommentText = commentViewModel.CommentText,
-                    BookId = commentViewModel.Book.Id,
-                    UserName = User.Identity.Name,
-                    CreationDate = DateTime.Now,
-                });
-                _database.SaveChanges();
+                _mainCommentRepository.AddMainComment(commentViewModel, User.Identity.Name);
             }
             else
             {
-                _database.SubComments.Add(new SubComment
-                {
-                    MainCommentId = commentViewModel.CommentIntialId,
-                    CommentText = commentViewModel.CommentText,
-                    UserName = User.Identity.Name,
-                    CreationDate = DateTime.Now,
-                });
-                _database.SaveChanges();
+                _subCommentRepository.AddSubComment(commentViewModel, User.Identity.Name);
             }
             return RedirectToAction("ViewBook", new { id = commentViewModel?.Book?.Id });
         }

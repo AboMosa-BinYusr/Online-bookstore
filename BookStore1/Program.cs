@@ -13,6 +13,8 @@ builder.Services.AddDbContext<AppDataContext>(options => options.UseSqlServer(
 );
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IMainCommentRepository, MainCommentRepository>();
+builder.Services.AddScoped<ISubCommentRepository, SubCommentRepository>();
 builder.Services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", options => {
 
     options.Cookie.Name = "CookieAuth";
