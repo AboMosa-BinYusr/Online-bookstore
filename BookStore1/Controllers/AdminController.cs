@@ -2,19 +2,22 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BookStore1.Models;
+using BookStore1.Models.Repositories.Interfaces;
 
 namespace BookStore1.Controllers
 {
     [Authorize(Policy = "HasToBeAdmin")]
     public class AdminController : Controller
     {
-        private readonly AppDataContext _database;
+        private readonly IBookRepository _bookRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(AppDataContext database, IWebHostEnvironment webHostEnvironment)
+        public AdminController(IBookRepository bookRepository, IAccountRepository accountRepository, IWebHostEnvironment webHostEnvironment)
         {
-            _database = database;
+            _bookRepository = bookRepository;
             _webHostEnvironment = webHostEnvironment;
+            _accountRepository = accountRepository;
         }
 
         public IActionResult AdminMainPage()
@@ -23,12 +26,12 @@ namespace BookStore1.Controllers
         }
         public IActionResult ShowBooks()
         {
-            var books = _database.Books.ToList();
+            var books = _bookRepository.GetBooks();
             return View(books);
         }
         public IActionResult ShowAccounts()
         {
-            var accounts = _database.Accounts.ToList();
+            var accounts = _accountRepository.GetAccounts;
             return View(accounts);
         }
 
@@ -50,8 +53,7 @@ namespace BookStore1.Controllers
                     book.Image.CopyTo(new FileStream(imagePath, FileMode.Create));
                 }
                 book.imageURL = imageName;
-                _database.Books.Add(book);
-                _database.SaveChanges();
+                _bookRepository.AddBook(book);
                 return RedirectToAction("ShowBooks", "Admin");
             }
             return View(book);
@@ -59,7 +61,7 @@ namespace BookStore1.Controllers
         [HttpGet]
         public IActionResult DeleteBook(int? id)
         {
-            var book = _database.Books.Find(id);
+            var book = _bookRepository.GetBook(id);
             if(book == null)
             {
                 return NotFound();
@@ -68,8 +70,7 @@ namespace BookStore1.Controllers
         }
         public IActionResult DeleteBook(Book book)
         {
-            _database.Books.Remove(book);
-            _database.SaveChanges();
+            _bookRepository.DeleteBook(book);
             return RedirectToAction("ShowBooks");
         }
     }

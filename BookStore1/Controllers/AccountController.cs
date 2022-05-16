@@ -3,16 +3,17 @@ using BookStore1.Data;
 using BookStore1.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using BookStore1.Models.Repositories.Interfaces;
 
 namespace BookStore1.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly AppDataContext _database;
+        private readonly IAccountRepository _accountRepository;
         public const string COOKIE = "CookieAuth";
-        public AccountController(AppDataContext database)
+        public AccountController(IAccountRepository accountRepository)
         {
-            _database = database;
+            _accountRepository = accountRepository;
         }
         [HttpGet]
         public IActionResult Reigester()
@@ -23,8 +24,7 @@ namespace BookStore1.Controllers
         {
             if (ModelState.IsValid)
             {
-                _database.Accounts.Add(account);
-                _database.SaveChanges();
+                _accountRepository.AddAccount(account);
                 return RedirectToAction("Success");
             }
             return View(account);
@@ -41,9 +41,7 @@ namespace BookStore1.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string UserName, string Password)
         {
-            var _account = _database.Accounts.Where(
-                acc => acc.UserName == UserName && acc.Password == Password
-                ).FirstOrDefault();
+            var _account = _accountRepository.GetAccount(UserName, Password);
             if (_account != null)
             {
                 List<Claim> claims = new()

@@ -1,5 +1,6 @@
 ﻿using BookStore1.Data;
 using BookStore1.Models;
+using BookStore1.Models.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,18 +8,18 @@ namespace BookStore1.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDataContext _database;
+        private readonly IBookRepository _bookRepository;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, AppDataContext database)
+        public HomeController(ILogger<HomeController> logger, IBookRepository bookRepository)
         {
             _logger = logger;
-            _database = database;
+            _bookRepository = bookRepository;
         }
 
         public IActionResult HomeView()
         {
-            IEnumerable<Book> books = _database.Books;
+            IEnumerable<Book> books = _bookRepository.GetBooks();
             return View(books);
         }
 

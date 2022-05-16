@@ -1,4 +1,6 @@
 using BookStore1.Data;
+using BookStore1.Models.Repositories;
+using BookStore1.Models.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,8 @@ builder.Services.AddDbContext<AppDataContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", options => {
 
     options.Cookie.Name = "CookieAuth";

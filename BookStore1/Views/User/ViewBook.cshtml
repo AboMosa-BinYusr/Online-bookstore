@@ -40,21 +40,34 @@
 <div class="MainComment">
     <partial name="_Comment" model='new BookCommentViewModel {Book = Model.Book, CommentIntialId = 0}' />
 </div>
-@foreach (var comment in Model.Book.MainComments){
-    <p>
-        <h5>@comment.UserName</h5>
-        @comment.CommentText --- @comment.CreationDate
-    </p>
-    <div class="Reply">
-        <div>
-            <partial name="_Comment" model='new BookCommentViewModel {Book = Model.Book, CommentIntialId = comment.Id}'>
+<div style="width: 30%; float: left; margin-bottom: 70px">
+    @foreach (var comment in Model.Book.MainComments){
+        <div style="border: 1px solid gray; padding: 10px; margin: 10px; border-radius: 5%">
+            <div>
+                <p>
+                <b style="font-size: 20px;">@comment.UserName</b>
+                <br>
+                <div style="font-size: 15px">@comment.CommentText</div> 
+                <br> 
+                <div style="font-size: 10px; text-align: right;">@comment.CreationDate</div>
+                </p>
+            </div>
+            <div class="Reply">
+                <div>
+                    <partial name="_Comment" model='new BookCommentViewModel {Book = Model.Book, CommentIntialId = comment.Id}'>
+                </div>
+                <div style="margin-top: 5px; margin-bottom: 5px">
+                    @foreach (var reply in comment.SubComments){
+                        <p>
+                        <b style="font-size: 20px;">@reply.UserName</b>
+                        <br>
+                        <div style="font-size: 15px">@reply.CommentText</div> 
+                        <br> 
+                        <div style="font-size: 10px; text-align: right;">@reply.CreationDate</div>
+                        </p>
+                    }
+                </div>
+           </div>
         </div>
-        @foreach (var reply in comment.SubComments){
-            <p>
-            <b>@reply.UserName</b>
-            <br>
-            @reply.CommentText --- @reply.CreationDate
-            </p>
-        }
-   </div>
-}
+    }
+</div>
