@@ -33,12 +33,6 @@ namespace BookStore1.Controllers
             var books = _bookRepository.GetBooks();
             return View(books);
         }
-        public IActionResult ShowAccounts()
-        {
-            var accounts = _accountRepository.GetAccounts;
-            return View(accounts);
-        }
-
         [HttpGet]
         public IActionResult AddBook()
         {
