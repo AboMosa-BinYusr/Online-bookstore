@@ -44,14 +44,7 @@ namespace BookStore1.Controllers
             var _account = _accountRepository.GetAccount(UserName, Password);
             if (_account != null)
             {
-                List<Claim> claims = new()
-                {
-                    new Claim("AccountType", _account.AccountType),
-                    new Claim(ClaimTypes.Name, _account.UserName),
-                };
-                ClaimsIdentity identity = new(claims, COOKIE);
-                ClaimsPrincipal claimPricipal = new(identity);
-                await HttpContext.SignInAsync(COOKIE, claimPricipal);
+                await AddCookieAsync(_account);
                 if (_account.AccountType == "Admin")
                 {
                     return RedirectToAction("AdminMainPage", "Admin");
@@ -69,6 +62,17 @@ namespace BookStore1.Controllers
         {
             await HttpContext.SignOutAsync(COOKIE);
             return RedirectToAction("HomeView", "Home");
+        }
+        public async Task AddCookieAsync(Account? account)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim("AccountType", account.AccountType),
+                new Claim(ClaimTypes.Name, account.UserName),
+            };
+            ClaimsIdentity identity = new(claims, COOKIE);
+            ClaimsPrincipal claimPricipal = new(identity);
+            await HttpContext.SignInAsync(COOKIE, claimPricipal);
         }
     }
 }

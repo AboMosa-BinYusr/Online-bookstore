@@ -51,9 +51,7 @@ namespace BookStore1.Controllers
                 if (book.Image != null)
                 {
                     imageName = book.Image.FileName;
-                    string imagesFolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    string imagePath = Path.Combine(imagesFolderPath, imageName);
-                    book.Image.CopyTo(new FileStream(imagePath, FileMode.Create));
+                    UploadImageToHost(book, imageName);
                 }
                 book.imageURL = imageName;
                 _bookRepository.AddBook(book);
@@ -85,6 +83,12 @@ namespace BookStore1.Controllers
         {
             _categoryRepository.AddCategory(category);
             return RedirectToAction("AdminMainPage");
+        }
+        public void UploadImageToHost(Book book, string imageName)
+        {
+            string imagesFolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+            string imagePath = Path.Combine(imagesFolderPath, imageName);
+            book.Image.CopyTo(new FileStream(imagePath, FileMode.Create));
         }
     }
 }
