@@ -16,7 +16,7 @@ namespace BookStore1.Controllers
             _accountRepository = accountRepository;
         }
         [HttpGet]
-        public IActionResult Reigester()
+        public IActionResult Reigster()
         {
             return View();
         }

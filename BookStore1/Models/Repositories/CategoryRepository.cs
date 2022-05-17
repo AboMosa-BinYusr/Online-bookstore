@@ -15,6 +15,7 @@ namespace BookStore1.Models.Repositories
         public void AddCategory(Category category)
         {
             _database.Categories.Add(category);
+            _database.SaveChanges();  
         }
 
         public IEnumerable<Category>? GetCategories()

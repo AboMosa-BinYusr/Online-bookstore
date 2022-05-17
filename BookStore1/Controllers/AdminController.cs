@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BookStore1.Models;
 using BookStore1.Models.Repositories.Interfaces;
+using BookStore1.ViewModels;
 
 namespace BookStore1.Controllers
 {
@@ -12,12 +13,15 @@ namespace BookStore1.Controllers
         private readonly IBookRepository _bookRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public AdminController(IBookRepository bookRepository, IAccountRepository accountRepository, IWebHostEnvironment webHostEnvironment)
+        public AdminController(IBookRepository bookRepository, IAccountRepository accountRepository,
+            IWebHostEnvironment webHostEnvironment, ICategoryRepository categoryRepository)
         {
             _bookRepository = bookRepository;
             _webHostEnvironment = webHostEnvironment;
             _accountRepository = accountRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public IActionResult AdminMainPage()
@@ -38,10 +42,15 @@ namespace BookStore1.Controllers
         [HttpGet]
         public IActionResult AddBook()
         {
-            return View();
+            var addBookViewModel = new AddBookViewModel
+            {
+                Categories = _categoryRepository.GetCategories()
+            };
+            return View(addBookViewModel);
         }
-        public IActionResult AddBook(Book book)
+        public IActionResult AddBook(AddBookViewModel addBookViewModel)
         {
+            var book = addBookViewModel.Book;
             if (ModelState.IsValid)
             {
                 string imageName = "";
@@ -56,7 +65,7 @@ namespace BookStore1.Controllers
                 _bookRepository.AddBook(book);
                 return RedirectToAction("ShowBooks", "Admin");
             }
-            return View(book);
+            return View(addBookViewModel);
         }
         [HttpGet]
         public IActionResult DeleteBook(int? id)
@@ -72,6 +81,16 @@ namespace BookStore1.Controllers
         {
             _bookRepository.DeleteBook(book);
             return RedirectToAction("ShowBooks");
+        }
+        [HttpGet]
+        public IActionResult AddCategory()
+        {
+            return View();
+        }
+        public IActionResult AddCategory(Category category)
+        {
+            _categoryRepository.AddCategory(category);
+            return RedirectToAction("AdminMainPage");
         }
     }
 }

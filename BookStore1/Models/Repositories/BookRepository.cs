@@ -13,7 +13,6 @@ namespace BookStore1.Models.Repositories
         }
         public void AddBook(Book book)
         {
-            book.CategoryId = 1;
             _database.Books.Add(book);
             _database.SaveChanges();
         }
