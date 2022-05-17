@@ -18,11 +18,6 @@ namespace BookStore1.Models.Repositories
             _database.SaveChanges();
         }
 
-        public Account? GetAccount(int? id)
-        {
-            return _database.Accounts.Find(id);
-        }
-
         public Account? GetAccount(string userName, string password)
         {
             return _database.Accounts.Where(acc => acc.UserName == userName && acc.Password == password)
