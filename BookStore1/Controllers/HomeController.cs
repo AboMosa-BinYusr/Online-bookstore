@@ -1,7 +1,9 @@
 ﻿using BookStore1.Data;
 using BookStore1.Models;
 using BookStore1.Models.Repositories.Interfaces;
+using BookStore1.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 
 namespace BookStore1.Controllers
@@ -10,17 +12,30 @@ namespace BookStore1.Controllers
     {
         private readonly IBookRepository _bookRepository;
         private readonly ILogger<HomeController> _logger;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public HomeController(ILogger<HomeController> logger, IBookRepository bookRepository)
+        public HomeController(ILogger<HomeController> logger, IBookRepository bookRepository, ICategoryRepository categoryRepository)
         {
             _logger = logger;
             _bookRepository = bookRepository;
+            _categoryRepository = categoryRepository;
         }
-
-        public IActionResult HomeView()
+        [HttpGet]
+        public IActionResult HomeView(int? categoryId)
         {
+            IEnumerable<Category>? categories = _categoryRepository.GetCategories();
             IEnumerable<Book> books = _bookRepository.GetBooks();
-            return View(books);
+            if (categoryId != null && categoryId != 0)
+            {
+                books = books.Where(b => b.CategoryId == categoryId);
+            }
+            var categoryBookViewModel = new CategoryBookViewModel
+            {
+                Categories = categories?.ToList(),
+                Books = books.ToList(),
+            };
+           
+            return View(categoryBookViewModel);
         }
 
         public IActionResult Privacy()
