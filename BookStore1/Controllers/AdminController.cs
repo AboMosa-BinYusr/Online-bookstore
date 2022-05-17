@@ -57,6 +57,10 @@ namespace BookStore1.Controllers
                 _bookRepository.AddBook(book);
                 return RedirectToAction("ShowBooks", "Admin");
             }
+            addBookViewModel = new AddBookViewModel
+            {
+                Categories = _categoryRepository.GetCategories()
+            };
             return View(addBookViewModel);
         }
         [HttpGet]
